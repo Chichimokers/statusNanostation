@@ -15,7 +15,7 @@ from typing import Dict, List, Any, Optional
 NANOSTATION_IP = "192.168.1.1"
 NANOSTATION_USER = "ubnt"
 NANOSTATION_PASSWORD = "123456789291203Er*."
-SERVER_URL = "http://esaki-jrr.com:5000/api/info"
+SERVER_URL = "http://esaki-jrr.com:8888/api/info"
 
 # Intervalo de actualización en segundos
 UPDATE_INTERVAL = 30

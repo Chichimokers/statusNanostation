@@ -7,7 +7,7 @@ import { db } from './database';
 import { NanostationStatus } from './types';
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8888;
 
 // Configurar Handlebars
 app.engine('handlebars', engine({
@@ -166,9 +166,9 @@ app.get('/api/history', async (req: Request, res: Response) => {
 
 // Iniciar servidor
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor iniciado en http://localhost:${PORT}`);
-  console.log(`📡 Endpoint para recibir datos: POST http://localhost:${PORT}/api/info`);
-  console.log(`🌐 Dashboard disponible en: http://localhost:${PORT}/`);
+  console.log(`🚀 Servidor iniciado en http://localhost:${8888}`);
+  console.log(`📡 Endpoint para recibir datos: POST http://localhost:${8888}/api/info`);
+  console.log(`🌐 Dashboard disponible en: http://localhost:${8888}/`);
 });
 
 // Manejo de cierre graceful
