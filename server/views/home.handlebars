@@ -1,0 +1,427 @@
+{{#if noData}}
+<div class="no-data">
+  <div class="no-data-icon">📊</div>
+  <h2>Sin datos disponibles</h2>
+  <p>{{message}}</p>
+</div>
+{{else}}
+<style>
+  .dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    border-left: 4px solid #667eea;
+  }
+
+  .card h2 {
+    color: #333;
+    font-size: 1.3em;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card-icon {
+    font-size: 1.5em;
+  }
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .info-row:last-child {
+    border-bottom: none;
+  }
+
+  .info-label {
+    color: #666;
+    font-weight: 500;
+  }
+
+  .info-value {
+    color: #333;
+    font-weight: 600;
+  }
+
+  .status-excellent { color: #10b981; }
+  .status-very-good { color: #3b82f6; }
+  .status-good { color: #f59e0b; }
+  .status-fair { color: #f97316; }
+  .status-poor { color: #ef4444; }
+
+  .timestamp {
+    text-align: center;
+    color: #666;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: #f0f0f0;
+    border-radius: 5px;
+  }
+
+  .section {
+    margin-bottom: 30px;
+  }
+
+  .section-title {
+    color: #333;
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #667eea;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+
+  th {
+    background: #667eea;
+    color: white;
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  tr:hover {
+    background: #f8f9fa;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: 600;
+  }
+
+  .badge-success { background: #d1fae5; color: #065f46; }
+  .badge-info { background: #dbeafe; color: #1e40af; }
+  .badge-warning { background: #fef3c7; color: #92400e; }
+  .badge-danger { background: #fee2e2; color: #991b1b; }
+
+  .progress-bar {
+    width: 100%;
+    height: 20px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 5px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    transition: width 0.3s;
+  }
+
+  .progress-excellent { background: #10b981; }
+  .progress-good { background: #3b82f6; }
+  .progress-warning { background: #f59e0b; }
+  .progress-danger { background: #ef4444; }
+
+  .metric {
+    text-align: center;
+  }
+
+  .metric-value {
+    font-size: 2em;
+    font-weight: 700;
+    color: #667eea;
+  }
+
+  .metric-label {
+    color: #666;
+    font-size: 0.9em;
+  }
+
+  .refresh-notice {
+    background: #eff6ff;
+    border: 1px solid #3b82f6;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #1e40af;
+  }
+</style>
+
+<div class="refresh-notice">
+  🔄 Actualización automática cada 30 segundos
+</div>
+
+<div class="timestamp">
+  <strong>Última actualización:</strong> {{formatDate status.timestamp}}
+</div>
+
+<!-- Información del Sistema -->
+<div class="section">
+  <h2 class="section-title">💻 Información del Sistema</h2>
+  <div class="dashboard">
+    <div class="card">
+      <h2><span class="card-icon">🖥️</span> Dispositivo</h2>
+      <div class="info-row">
+        <span class="info-label">Hostname:</span>
+        <span class="info-value">{{status.system.hostname}}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Modelo:</span>
+        <span class="info-value">{{status.system.model}}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Firmware:</span>
+        <span class="info-value">{{status.system.firmwareVersion}}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Device ID:</span>
+        <span class="info-value">{{status.deviceId}}</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="card-icon">⏱️</span> Rendimiento</h2>
+      <div class="info-row">
+        <span class="info-label">Uptime:</span>
+        <span class="info-value">{{formatUptime status.system.uptime}}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Load Average:</span>
+        <span class="info-value">{{status.system.loadAverage}}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">CPU:</span>
+        <span class="info-value">{{status.system.cpuUsage}}%</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="card-icon">💾</span> Memoria</h2>
+      <div class="metric">
+        <div class="metric-value">{{status.system.memoryUsage}}%</div>
+        <div class="metric-label">Uso de memoria</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill {{#if (gt status.system.memoryUsage 80)}}progress-danger{{else}}{{#if (gt status.system.memoryUsage 60)}}progress-warning{{else}}progress-good{{/if}}{{/if}}" 
+             style="width: {{status.system.memoryUsage}}%"></div>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Total:</span>
+        <span class="info-value">{{formatBytes status.system.memoryTotal}}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Libre:</span>
+        <span class="info-value">{{formatBytes status.system.memoryFree}}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Interfaces Wireless -->
+<div class="section">
+  <h2 class="section-title">📶 Interfaces Wireless</h2>
+  {{#each status.wireless}}
+  <div class="card" style="margin-bottom: 20px;">
+    <h2><span class="card-icon">📡</span> {{interfaceName}} - {{ssid}}</h2>
+    <div class="dashboard" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+      <div>
+        <div class="info-row">
+          <span class="info-label">Modo:</span>
+          <span class="info-value">{{mode}}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Frecuencia:</span>
+          <span class="info-value">{{frequency}} MHz</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Canal:</span>
+          <span class="info-value">{{channel}} ({{channelWidth}} MHz)</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">TX Power:</span>
+          <span class="info-value">{{txPower}} dBm</span>
+        </div>
+      </div>
+      <div>
+        <div class="info-row">
+          <span class="info-label">RSSI:</span>
+          <span class="info-value status-{{signalClass rssi}}">{{rssi}} dBm</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Signal:</span>
+          <span class="info-value status-{{signalClass signal}}">{{signal}} dBm</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Noise:</span>
+          <span class="info-value">{{noise}} dBm</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">CCQ:</span>
+          <span class="info-value">{{ccq}}%</span>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 15px;">
+      <div class="metric-label">Calidad de Conexión: <strong class="status-{{signalClass rssi}}">{{signalQuality rssi}}</strong></div>
+      <div class="progress-bar">
+        <div class="progress-fill {{#if (gt ccq 80)}}progress-excellent{{else}}{{#if (gt ccq 60)}}progress-good{{else}}progress-warning{{/if}}{{/if}}" 
+             style="width: {{ccq}}%"></div>
+      </div>
+    </div>
+  </div>
+  {{/each}}
+</div>
+
+<!-- Estaciones Conectadas -->
+{{#if status.stations}}
+<div class="section">
+  <h2 class="section-title">👥 Estaciones Conectadas ({{status.stations.length}})</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>MAC Address</th>
+        <th>Signal</th>
+        <th>Noise</th>
+        <th>RSSI</th>
+        <th>CCQ</th>
+        <th>TX Rate</th>
+        <th>RX Rate</th>
+        <th>Uptime</th>
+        <th>Calidad</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each status.stations}}
+      <tr>
+        <td><code>{{macAddress}}</code></td>
+        <td class="status-{{signalClass signal}}"><strong>{{signal}} dBm</strong></td>
+        <td>{{noise}} dBm</td>
+        <td class="status-{{signalClass rssi}}"><strong>{{rssi}} dBm</strong></td>
+        <td><strong>{{ccq}}%</strong></td>
+        <td>{{txRate}} Mbps</td>
+        <td>{{rxRate}} Mbps</td>
+        <td>{{formatUptime uptime}}</td>
+        <td><span class="badge badge-{{#if (gt rssi -60)}}success{{else}}{{#if (gt rssi -70)}}info{{else}}warning{{/if}}{{/if}}">{{signalQuality rssi}}</span></td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+{{/if}}
+
+<!-- Interfaces de Red -->
+<div class="section">
+  <h2 class="section-title">🌐 Interfaces de Red</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Interfaz</th>
+        <th>IP</th>
+        <th>MAC</th>
+        <th>Estado</th>
+        <th>RX</th>
+        <th>TX</th>
+        <th>Errores RX/TX</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each status.networks}}
+      <tr>
+        <td><strong>{{name}}</strong></td>
+        <td>{{ipAddress}}/{{netmask}}</td>
+        <td><code>{{macAddress}}</code></td>
+        <td><span class="badge {{#if (eq status 'up')}}badge-success{{else}}badge-danger{{/if}}">{{status}}</span></td>
+        <td>{{formatBytes rxBytes}}</td>
+        <td>{{formatBytes txBytes}}</td>
+        <td>{{rxErrors}} / {{txErrors}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+
+<!-- Redes WiFi Detectadas -->
+{{#if status.wirelessScan}}
+<div class="section">
+  <h2 class="section-title">🔍 Redes WiFi Detectadas ({{status.wirelessScan.length}})</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>SSID</th>
+        <th>BSSID</th>
+        <th>Canal</th>
+        <th>Frecuencia</th>
+        <th>Señal</th>
+        <th>Calidad</th>
+        <th>Seguridad</th>
+        <th>Modo</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each status.wirelessScan}}
+      <tr>
+        <td><strong>{{ssid}}</strong></td>
+        <td><code>{{macAddress}}</code></td>
+        <td>{{channel}}</td>
+        <td>{{frequency}} MHz</td>
+        <td class="status-{{signalClass signal}}"><strong>{{signal}} dBm</strong></td>
+        <td>{{quality}}%</td>
+        <td><span class="badge badge-info">{{encryption}}</span></td>
+        <td>{{mode}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+{{/if}}
+
+<!-- AirMax -->
+{{#if status.airmax}}
+<div class="section">
+  <h2 class="section-title">⚡ AirMax</h2>
+  <div class="dashboard">
+    <div class="card">
+      <div class="info-row">
+        <span class="info-label">Estado:</span>
+        <span class="info-value">{{#if status.airmax.enabled}}✅ Habilitado{{else}}❌ Deshabilitado{{/if}}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Calidad:</span>
+        <span class="info-value">{{status.airmax.quality}}%</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Capacidad:</span>
+        <span class="info-value">{{status.airmax.capacity}}%</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Prioridad:</span>
+        <span class="info-value">{{status.airmax.priority}}</span>
+      </div>
+    </div>
+  </div>
+</div>
+{{/if}}
+
+<script>
+  // Auto-refresh cada 30 segundos
+  setTimeout(() => {
+    window.location.reload();
+  }, 30000);
+</script>
+{{/if}}
