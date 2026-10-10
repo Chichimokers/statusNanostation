@@ -4,12 +4,17 @@
   "description": "Server to receive and display Nanostation M5 status information",
   "main": "dist/index.js",
   "scripts": {
-    "start": "node dist/index.js",
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "build": "tsc",
+    "start": "node init && node dist/index.js",
+    "dev": "node init && ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "node init && tsc",
     "clean": "rimraf dist"
   },
-  "keywords": ["nanostation", "express", "typescript", "sqlite"],
+  "keywords": [
+    "nanostation",
+    "express",
+    "typescript",
+    "sqlite"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
